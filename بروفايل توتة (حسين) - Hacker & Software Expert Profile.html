@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تـــوتـــة (حـــســـيـــن) | Cyber Hacker & Master Software Engineer</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Cairo & Fira Code -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;800;900&family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            black: '#050508',
+                            dark: '#0b0c10',
+                            card: '#12141c',
+                            border: '#ff003c',
+                            red: '#ff003c',
+                            redGlow: '#ff0055',
+                            cyan: '#00f0ff',
+                            green: '#00ff66',
+                            text: '#c5c6c7'
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        code: ['Fira Code', 'monospace']
+                    },
+                    animation: {
+                        'laser-pulse': 'laserPulse 1.5s infinite alternate',
+                        'glitch': 'glitch 1s infinite alternate',
+                        'scanline': 'scanline 8s linear infinite',
+                        'float': 'float 4s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        laserPulse: {
+                            '0%': { filter: 'drop-shadow(0 0 5px #ff003c) drop-shadow(0 0 15px #ff0055)' },
+                            '100%': { filter: 'drop-shadow(0 0 20px #ff003c) drop-shadow(0 0 35px #ff003c)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #050508;
+            color: #e0e6ed;
+            overflow-x: hidden;
+        }
+
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 60, 0.03), rgba(0, 240, 255, 0.01), rgba(0, 255, 102, 0.03));
+            background-size: 100% 4px, 6px 100%;
+            z-index: 40;
+            opacity: 0.6;
+        }
+
+        .glow-red {
+            box-shadow: 0 0 25px rgba(255, 0, 60, 0.4);
+        }
+        .glow-red-lg {
+            box-shadow: 0 0 45px rgba(255, 0, 60, 0.6);
+        }
+        .text-glow-red {
+            text-shadow: 0 0 10px #ff003c, 0 0 20px #ff0055, 0 0 30px #ff003c;
+        }
+        .text-glow-cyan {
+            text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
+        }
+
+        /* Dynamic Laser Flare Effect over Right Eye */
+        .laser-eye-flare {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ffffff, 0 0 20px #ff003c, 0 0 35px #ff003c, 0 0 50px #ff003c;
+            z-index: 30;
+            animation: pulseFlare 1.2s ease-in-out infinite alternate;
+        }
+        
+        .laser-beam-line {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,0,60,0.8) 40%, transparent 100%);
+            transform-origin: left center;
+            z-index: 29;
+            filter: drop-shadow(0 0 8px #ff003c);
+        }
+
+        @keyframes pulseFlare {
+            0% { transform: scale(0.8); opacity: 0.8; }
+            100% { transform: scale(1.4); opacity: 1; }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050508;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ff003c;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff0055;
+        }
+
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen selection:bg-cyber-red selection:text-white">
+
+    <!-- CRT Overlay Effects -->
+    <div class="scanlines"></div>
+
+    <!-- Matrix Background Canvas -->
+    <canvas id="cyber-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0 opacity-25"></canvas>
+
+    <!-- Header / Navbar Section -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-cyber-black/80 border-b border-cyber-red/30 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Brand Logo -->
+            <a href="#hero" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-lg bg-cyber-card border border-cyber-red flex items-center justify-center text-cyber-red group-hover:bg-cyber-red group-hover:text-black transition-all duration-300 shadow-[0_0_15px_rgba(255,0,60,0.4)]">
+                    <i class="fa-solid fa-terminal text-lg"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xl font-black tracking-wider text-white code-font group-hover:text-cyber-red transition-colors">
+                        TOOTA<span class="text-cyber-red">_</span>HUSSEIN
+                    </span>
+                    <span class="text-[10px] text-cyber-cyan code-font tracking-widest uppercase">
+                        [Root Access Granted]
+                    </span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center gap-8 code-font text-sm">
+                <a href="#hero" class="text-gray-300 hover:text-cyber-red transition-colors flex items-center gap-1.5">
+                    <span class="text-cyber-red">&gt;</span> الرئيسية
+                </a>
+                <a href="#about" class="text-gray-300 hover:text-cyber-red transition-colors flex items-center gap-1.5">
+                    <span class="text-cyber-red">&gt;</span> عن_الأسطورة
+                </a>
+                <a href="#skills" class="text-gray-300 hover:text-cyber-red transition-colors flex items-center gap-1.5">
+                    <span class="text-cyber-red">&gt;</span> المهارات
+                </a>
+                <a href="#exploits" class="text-gray-300 hover:text-cyber-red transition-colors flex items-center gap-1.5">
+                    <span class="text-cyber-red">&gt;</span> ثغرات_البنوك
+                </a>
+                <a href="#terminal-section" class="text-gray-300 hover:text-cyber-red transition-colors flex items-center gap-1.5">
+                    <span class="text-cyber-red">&gt;</span> التيرمينال
+                </a>
+                <a href="#contact" class="text-gray-300 hover:text-cyber-red transition-colors flex items-center gap-1.5">
+                    <span class="text-cyber-red">&gt;</span> التواصل
+                </a>
+            </nav>
+
+            <!-- Quick Utilities & Action Buttons -->
+            <div class="hidden md:flex items-center gap-3">
+                <!-- Sound Effects Toggle Button -->
+                <button id="audio-toggle-btn" class="p-2.5 rounded-lg bg-cyber-card border border-cyber-red/40 text-cyber-red hover:bg-cyber-red/20 transition-all text-sm flex items-center gap-2" title="تفعيل/تعطيل الصوت التفاعلي">
+                    <i id="audio-icon" class="fa-solid fa-volume-high"></i>
+                    <span class="text-xs code-font">SFX</span>
+                </button>
+                <!-- Quick Access Terminal Button -->
+                <a href="#terminal-section" class="px-4 py-2 rounded-lg bg-cyber-red text-black font-bold text-xs uppercase tracking-wider hover:bg-white hover:shadow-[0_0_20px_#ffffff] transition-all duration-300 flex items-center gap-2">
+                    <i class="fa-solid fa-code"></i> فتح الأوامر
+                </a>
+            </div>
+
+            <!-- Mobile Hamburger Menu Button -->
+            <div class="md:hidden flex items-center gap-3">
+                <button id="mobile-menu-btn" class="p-2.5 rounded-lg bg-cyber-card border border-cyber-red text-cyber-red hover:bg-cyber-red hover:text-black transition-all">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Navigation -->
+        <div id="mobile-drawer" class="hidden md:hidden bg-cyber-card/95 border-b border-cyber-red px-6 py-6 transition-all duration-300">
+            <div class="flex flex-col gap-4 code-font">
+                <a href="#hero" class="mobile-link text-lg text-gray-200 hover:text-cyber-red py-2 border-b border-gray-800">
+                    <i class="fa-solid fa-chevron-left text-cyber-red text-xs ml-2"></i> الرئيسية
+                </a>
+                <a href="#about" class="mobile-link text-lg text-gray-200 hover:text-cyber-red py-2 border-b border-gray-800">
+                    <i class="fa-solid fa-chevron-left text-cyber-red text-xs ml-2"></i> عن الأسـطـورة (توتة)
+                </a>
+                <a href="#skills" class="mobile-link text-lg text-gray-200 hover:text-cyber-red py-2 border-b border-gray-800">
+                    <i class="fa-solid fa-chevron-left text-cyber-red text-xs ml-2"></i> المهارات والترسانة
+                </a>
+                <a href="#exploits" class="mobile-link text-lg text-gray-200 hover:text-cyber-red py-2 border-b border-gray-800">
+                    <i class="fa-solid fa-chevron-left text-cyber-red text-xs ml-2"></i> عمليات اختراق البنوك
+                </a>
+                <a href="#terminal-section" class="mobile-link text-lg text-gray-200 hover:text-cyber-red py-2 border-b border-gray-800">
+                    <i class="fa-solid fa-chevron-left text-cyber-red text-xs ml-2"></i> تيرمينال الأوامر
+                </a>
+                <a href="#contact" class="mobile-link text-lg text-gray-200 hover:text-cyber-red py-2">
+                    <i class="fa-solid fa-chevron-left text-cyber-red text-xs ml-2"></i> قنوات التواصل المشفرة
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Hero Section -->
+    <section id="hero" class="relative z-10 pt-10 pb-20 md:py-28 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left Details Content (Text & Title) -->
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-right">
+                    
+                    <!-- Status Badge -->
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyber-red/10 border border-cyber-red/50 text-cyber-red text-xs md:text-sm font-semibold code-font shadow-[0_0_15px_rgba(255,0,60,0.2)] animate-pulse">
+                        <span class="w-2.5 h-2.5 rounded-full bg-cyber-red animate-ping"></span>
+                        SYSTEM STATUS: UNSTOPPABLE ROOT ACCESS
+                    </div>
+
+                    <!-- Main Name & Alias -->
+                    <div>
+                        <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight">
+                            تــوتــة <span class="text-cyber-red inline-block hover:scale-105 transition-transform duration-300 text-glow-red">(حســـيــن)</span>
+                        </h1>
+                        <p class="mt-3 text-lg sm:text-2xl text-cyber-cyan font-bold code-font">
+                            &lt;ELITE CYBER SECURITY MASTER & SOFTWARE ARCHITECT/&gt;
+                        </p>
+                    </div>
+
+                    <!-- Hacker Bio Narrative Description -->
+                    <p class="text-gray-300 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                        مرحباً بك في المنطقة السيبرانية للأسطورة <span class="text-white font-bold underline decoration-cyber-red">تــوتــة (حسين)</span>. 
+                        خبير تطوير الأنظمة العميقة، مهندس الثغرات الأمنية المستعصية، ومخترق البنوك والسيرفرات المركزية الأكثر دقة وتعقيداً. 
+                        نحول الثغرات المستحيلة إلى مفاتيح تحكم مطلقة!
+                    </p>
+
+                    <!-- Interactive Typing Console Dynamic Message -->
+                    <div class="bg-cyber-card/90 border-r-4 border-cyber-red p-4 rounded-xl shadow-lg code-font text-right max-w-2xl mx-auto lg:mx-0">
+                        <div class="flex items-center justify-between text-xs text-gray-500 mb-2">
+                            <span>LIVE_SYSTEM_STREAM</span>
+                            <span class="text-cyber-green flex items-center gap-1">
+                                <i class="fa-solid fa-circle text-[8px] animate-pulse"></i> CONNECTED
+                            </span>
+                        </div>
+                        <div class="text-cyber-green font-mono text-sm sm:text-base leading-relaxed">
+                            <span class="text-cyber-red">&gt; </span><span id="typed-text"></span><span class="animate-pulse">_</span>
+                        </div>
+                    </div>
+
+                    <!-- Hero Call-To-Action Buttons -->
+                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
+                        <a href="#exploits" class="px-8 py-4 rounded-xl bg-cyber-red text-black font-black text-sm uppercase tracking-wider hover:bg-white hover:shadow-[0_0_30px_#ff003c] transition-all duration-300 flex items-center gap-3 transform hover:-translate-y-1">
+                            <i class="fa-solid fa-shield-halved text-lg"></i> سبر أغوار الثغرات
+                        </a>
+                        <a href="#terminal-section" class="px-8 py-4 rounded-xl bg-cyber-card border-2 border-cyber-cyan/50 text-cyber-cyan font-bold text-sm tracking-wider hover:border-cyber-cyan hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all duration-300 flex items-center gap-3 transform hover:-translate-y-1">
+                            <i class="fa-solid fa-terminal text-lg"></i> التيرمينال التفاعلي
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Profile Image Card with Animated Red Laser Eye -->
+                <div class="lg:col-span-5 flex flex-col items-center justify-center">
+                    <div class="relative group w-full max-w-md">
+                        
+                        <!-- Glowing Hex Frame Layer -->
+                        <div class="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyber-red via-cyber-cyan to-cyber-green opacity-70 blur-xl group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
+
+                        <!-- Main Profile Box Container -->
+                        <div class="relative bg-cyber-card border-2 border-cyber-red/80 rounded-3xl overflow-hidden p-4 shadow-[0_0_50px_rgba(255,0,60,0.3)]">
+                            
+                            <!-- Card Header Bar -->
+                            <div class="flex items-center justify-between pb-3 mb-3 border-b border-gray-800 code-font text-xs">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
+                                    <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span>
+                                    <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
+                                </div>
+                                <span class="text-cyber-red font-bold tracking-widest">[TARGET: TOOTA_CORE]</span>
+                            </div>
+
+                            <!-- Image Container with Dynamic Laser Flare Overlays -->
+                            <div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden bg-black flex items-center justify-center border border-cyber-red/40 group">
+                                
+                                <!-- User Profile Image (Cristiano Laser Eyes aesthetic loaded default or dynamic) -->
+                                <img id="profile-img" 
+                                     src="1000203874.jpg" 
+                                     onerror="this.src='https://placehold.co/600x750/0b0c10/ff003c?text=TOOTA+(حسين)'" 
+                                     alt="توتة (حسين) - الهكر الأسطوري" 
+                                     class="w-full h-full object-cover object-top filter brightness-95 contrast-110 transition-transform duration-700 group-hover:scale-105">
+
+                                <!-- Laser Glow Layer Effects -->
+                                <!-- Laser Red Flare on Eye (Position adjusted for optimal look) -->
+                                <div id="laser-eye" class="laser-eye-flare" style="top: 28%; right: 41%;"></div>
+                                
+                                <!-- Laser Beam Ray radiating from the eye -->
+                                <div id="laser-beam" class="laser-beam-line" style="top: 29.5%; right: 41%; width: 200px; transform: rotate(-25deg);"></div>
+                                <div class="laser-beam-line" style="top: 29.5%; right: 41%; width: 150px; transform: rotate(15deg); opacity: 0.6;"></div>
+
+                                <!-- Overlay Cyber Matrix Hud Lines on Image -->
+                                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+                                
+                                <div class="absolute bottom-4 left-4 right-4 p-3 bg-cyber-black/80 backdrop-blur-md rounded-xl border border-cyber-red/40 text-center">
+                                    <span class="text-xs text-cyber-cyan code-font font-bold block">IDENTITY VERIFIED</span>
+                                    <span class="text-sm text-white font-extrabold tracking-wider">الأسـطـورة تــوتــة (حســين)</span>
+                                </div>
+                            </div>
+
+                            <!-- Image Selector / Changer Helper (For user convenience) -->
+                            <div class="mt-3 flex items-center justify-between text-xs text-gray-400 code-font px-1">
+                                <label for="image-upload" class="cursor-pointer hover:text-cyber-cyan flex items-center gap-1">
+                                    <i class="fa-solid fa-camera text-cyber-red"></i> تغيير الصورة الشخصية
+                                </label>
+                                <input type="file" id="image-upload" accept="image/*" class="hidden">
+                                <span id="laser-mode-btn" class="cursor-pointer text-cyber-red font-bold hover:underline">
+                                    <i class="fa-solid fa-bolt"></i> توهج الليزر: نشط
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Hacker Statistics Grid Section -->
+    <section class="relative z-10 py-10 bg-cyber-card/60 border-y border-cyber-red/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                
+                <div class="p-6 rounded-2xl bg-cyber-black/80 border border-cyber-red/30 shadow-lg">
+                    <div class="text-3xl sm:text-5xl font-black text-cyber-red code-font mb-2 text-glow-red" data-target="99.9">
+                        99.9%
+                    </div>
+                    <div class="text-xs sm:text-sm text-gray-400 font-bold">نسبة نجاح اختراق الثغرات</div>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-cyber-black/80 border border-cyber-cyan/30 shadow-lg">
+                    <div class="text-3xl sm:text-5xl font-black text-cyber-cyan code-font mb-2 text-glow-cyan" data-target="150">
+                        +150
+                    </div>
+                    <div class="text-xs sm:text-sm text-gray-400 font-bold">بنك ونظام مالي تم فحص أمنه</div>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-cyber-black/80 border border-cyber-green/30 shadow-lg">
+                    <div class="text-3xl sm:text-5xl font-black text-cyber-green code-font mb-2" data-target="0">
+                        0ms
+                    </div>
+                    <div class="text-xs sm:text-sm text-gray-400 font-bold">تأخير في تجاوز الحمايات</div>
+                </div>
+
+                <div class="p-6 rounded-2xl bg-cyber-black/80 border border-cyber-red/30 shadow-lg">
+                    <div class="text-3xl sm:text-5xl font-black text-white code-font mb-2">
+                        24/7
+                    </div>
+                    <div class="text-xs sm:text-sm text-gray-400 font-bold">امتلاك مطلق للنواة والسيرفرات</div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Detailed About Section -->
+    <section id="about" class="relative z-10 py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-5xl font-black text-white">
+                    عن الأسـطـورة <span class="text-cyber-red text-glow-red">تــوتــة (حســين)</span>
+                </h2>
+                <div class="w-24 h-1 bg-cyber-red mx-auto mt-4 rounded-full shadow-[0_0_10px_#ff003c]"></div>
+                <p class="mt-4 text-gray-400 text-sm sm:text-base code-font">
+                    [SYSTEM_PROFILE // FILE_ID: #8892-TOOTA]
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Card 1: Ethical & Military Hacking -->
+                <div class="p-8 rounded-3xl bg-cyber-card border border-cyber-red/30 hover:border-cyber-red transition-all duration-300 transform hover:-translate-y-2 group">
+                    <div class="w-16 h-16 rounded-2xl bg-cyber-red/10 border border-cyber-red flex items-center justify-center text-cyber-red text-2xl mb-6 group-hover:bg-cyber-red group-hover:text-black transition-all">
+                        <i class="fa-solid fa-user-ninja"></i>
+                    </div>
+                    <h3 class="text-xl font-black text-white mb-3">هكر عالي المستوى (Elite Hacker)</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        خبير في اكتشاف ثغرات الـ Zero-Day المستعصية، واختراق أكثر الأنظمة تعقيداً في العالم. يمتلك خبرة واسعة في تحليل شفرات السيرفرات وتجاوز أعقـد جدران النارية السيبرانية.
+                    </p>
+                </div>
+
+                <!-- Card 2: Banking Penetration & Core Security -->
+                <div class="p-8 rounded-3xl bg-cyber-card border border-cyber-cyan/30 hover:border-cyber-cyan transition-all duration-300 transform hover:-translate-y-2 group">
+                    <div class="w-16 h-16 rounded-2xl bg-cyber-cyan/10 border border-cyber-cyan flex items-center justify-center text-cyber-cyan text-2xl mb-6 group-hover:bg-cyber-cyan group-hover:text-black transition-all">
+                        <i class="fa-solid fa-building-columns"></i>
+                    </div>
+                    <h3 class="text-xl font-black text-white mb-3">اختراق وتأمين الأنظمة البنكية</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        تخصص في اختبار اختراق بروتوكولات تحويل الأموال والشبكات المالية الكبرى (SWIFT / Mainframes). اكتشاف النقاط الحساسة وتدمير أو تأمين مسارات التسلل في البنوك.
+                    </p>
+                </div>
+
+                <!-- Card 3: Deep Software Engineering -->
+                <div class="p-8 rounded-3xl bg-cyber-card border border-cyber-green/30 hover:border-cyber-green transition-all duration-300 transform hover:-translate-y-2 group">
+                    <div class="w-16 h-16 rounded-2xl bg-cyber-green/10 border border-cyber-green flex items-center justify-center text-cyber-green text-2xl mb-6 group-hover:bg-cyber-green group-hover:text-black transition-all">
+                        <i class="fa-solid fa-laptop-code"></i>
+                    </div>
+                    <h3 class="text-xl font-black text-white mb-3">هندسة البرمجيات القوية</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        بناء وتطوير البرمجيات المعقدة بلغات C/C++, Python, Rust, و JavaScript. إنشاء أدوات التحكم بالنواة (Kernel Exploit Frameworks) وبوتات التحليل الذكي.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Skills Arsenal & Progress Bars -->
+    <section id="skills" class="relative z-10 py-20 bg-cyber-card/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-5xl font-black text-white">
+                    الترسانة والمهارات البرمجية
+                </h2>
+                <div class="w-24 h-1 bg-cyber-red mx-auto mt-4 rounded-full shadow-[0_0_10px_#ff003c]"></div>
+                <p class="mt-4 text-gray-400 text-sm sm:text-base code-font">
+                    [TECHNICAL ARSENAL // PROFICIENCY: OVERLOAD]
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                
+                <!-- Left Column: Hacker Capabilities -->
+                <div class="space-y-6 bg-cyber-card p-8 rounded-3xl border border-cyber-red/30">
+                    <h3 class="text-xl font-extrabold text-cyber-red code-font mb-6 flex items-center gap-2">
+                        <i class="fa-solid fa-bug"></i> قدرات الهكر واختراق الأنظمة
+                    </h3>
+
+                    <!-- Skill 1 -->
+                    <div>
+                        <div class="flex justify-between text-sm font-bold mb-2">
+                            <span class="text-white">اختراق البنوك والأنظمة المالية (Banking Pentesting)</span>
+                            <span class="text-cyber-red code-font">99%</span>
+                        </div>
+                        <div class="w-full h-3 rounded-full bg-black overflow-hidden border border-cyber-red/30">
+                            <div class="h-full bg-gradient-to-r from-cyber-red to-cyber-redGlow rounded-full w-[99%] shadow-[0_0_10px_#ff003c]"></div>
+                        </div>
+                    </div>
+
+                    <!-- Skill 2 -->
+                    <div>
+                        <div class="flex justify-between text-sm font-bold mb-2">
+                            <span class="text-white">اكتشاف ثغرات Zero-Day & Exploit Dev</span>
+                            <span class="text-cyber-red code-font">97%</span>
+                        </div>
+                        <div class="w-full h-3 rounded-full bg-black overflow-hidden border border-cyber-red/30">
+                            <div class="h-full bg-gradient-to-r from-cyber-red to-cyber-redGlow rounded-full w-[97%] shadow-[0_0_10px_#ff003c]"></div>
+                        </div>
+                    </div>
+
+                    <!-- Skill 3 -->
+                    <div>
+                        <div class="flex justify-between text-sm font-bold mb-2">
+                            <span class="text-white">الهندسة العكسية وتكيك التشفير (Reverse Engineering)</span>
+                            <span class="text-cyber-red code-font">95%</span>
+                        </div>
+                        <div class="w-full h-3 rounded-full bg-black overflow-hidden border border-cyber-red/30">
+                            <div class="h-full bg-gradient-to-r from-cyber-red to-cyber-redGlow rounded-full w-[95%] shadow-[0_0_10px_#ff003c]"></div>
+                        </div>
+                    </div>
+
+                    <!-- Skill 4 -->
+                    <div>
+                        <div class="flex justify-between text-sm font-bold mb-2">
+                            <span class="text-white">اختراق الشبكات السحابية و السيرفرات (Cloud & Kernel)</span>
+                            <span class="text-cyber-red code-font">98%</span>
+                        </div>
+                        <div class="w-full h-3 rounded-full bg-black overflow-hidden border border-cyber-red/30">
+                            <div class="h-full bg-gradient-to-r from-cyber-red to-cyber-redGlow rounded-full w-[98%] shadow-[0_0_10px_#ff003c]"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Software Engineering & Dev -->
+                <div class="space-y-6 bg-cyber-card p-8 rounded-3xl border border-cyber-cyan/30">
+                    <h3 class="text-xl font-extrabold text-cyber-cyan code-font mb-6 flex items-center gap-2">
+                        <i class="fa-solid fa-code"></i> البرمجة وتطوير الأنظمة العملاقة
+                    </h3>
+
+                    <!-- Skill 1 -->
+                    <div>
+                        <div class="flex justify-between text-sm font-bold mb-2">
+                            <span class="text-white">C / C++ / Assembly / Rust (Low-Level Systems)</span>
+                            <span class="text-cyber-cyan code-font">96%</span>
+                        </div>
+                        <div class="w-full h-3 rounded-full bg-black overflow-hidden border border-cyber-cyan/30">
+                            <div class="h-full bg-gradient-to-r from-cyber-cyan to-blue-500 rounded-full w-[96%] shadow-[0_0_10px_#00f0ff]"></div>
+                        </div>
+                    </div>
+
+                    <!-- Skill 2 -->
+                    <div>
+                        <div class="flex justify-between text-sm font-bold mb-2">
+                            <span class="text-white">Python / Network Automation & AI Botnets</span>
+                            <span class="text-cyber-cyan code-font">99%</span>
+                        </div>
+                        <div class="w-full h-3 rounded-full bg-black overflow-hidden border border-cyber-cyan/30">
+                            <div class="h-full bg-gradient-to-r from-cyber-cyan to-blue-500 rounded-full w-[99%] shadow-[0_0_10px_#00f0ff]"></div>
+                        </div>
+                    </div>
+
+                    <!-- Skill 3 -->
+                    <div>
+                        <div class="flex justify-between text-sm font-bold mb-2">
+                            <span class="text-white">Full-Stack Web Architectures & REST APIs</span>
+                            <span class="text-cyber-cyan code-font">94%</span>
+                        </div>
+                        <div class="w-full h-3 rounded-full bg-black overflow-hidden border border-cyber-cyan/30">
+                            <div class="h-full bg-gradient-to-r from-cyber-cyan to-blue-500 rounded-full w-[94%] shadow-[0_0_10px_#00f0ff]"></div>
+                        </div>
+                    </div>
+
+                    <!-- Skill 4 -->
+                    <div>
+                        <div class="flex justify-between text-sm font-bold mb-2">
+                            <span class="text-white">أنظمة تشفير البيانات والـ Blockchain Security</span>
+                            <span class="text-cyber-cyan code-font">98%</span>
+                        </div>
+                        <div class="w-full h-3 rounded-full bg-black overflow-hidden border border-cyber-cyan/30">
+                            <div class="h-full bg-gradient-to-r from-cyber-cyan to-blue-500 rounded-full w-[98%] shadow-[0_0_10px_#00f0ff]"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Bank Exploits & Operations Showcase -->
+    <section id="exploits" class="relative z-10 py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-5xl font-black text-white">
+                    سجل عمليات اختراق البنوك والأنظمة
+                </h2>
+                <div class="w-24 h-1 bg-cyber-red mx-auto mt-4 rounded-full shadow-[0_0_10px_#ff003c]"></div>
+                <p class="mt-4 text-gray-400 text-sm sm:text-base code-font">
+                    [CLASSIFIED OPERATIONS // ACCESS LEVEL: RED]
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Operation Card 1 -->
+                <div class="bg-cyber-card border border-cyber-red/40 rounded-3xl p-6 relative overflow-hidden group hover:shadow-[0_0_30px_rgba(255,0,60,0.3)] transition-all">
+                    <div class="absolute top-0 right-0 bg-cyber-red text-black text-[10px] font-black uppercase px-3 py-1 rounded-bl-xl code-font">
+                        TOP SECRET
+                    </div>
+                    <div class="text-cyber-red text-3xl mb-4">
+                        <i class="fa-solid fa-vault"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">عملية "البنك المركزي - SWIFT Bypass"</h3>
+                    <p class="text-gray-400 text-xs sm:text-sm mb-4 leading-relaxed">
+                        اكتشاف ثغرة في تشفير بروتوكولات التحويلات المالية الدولية المعتمدة، تجاوز التحقق المزدوج وإعادة توجيه البيانات بدون ترك أثر.
+                    </p>
+                    <button onclick="openExploitModal('SWIFT Bypass Operation', 'تم كشف ثغرة في خوادم المعالجة التابعة للبنوك الدولية، حيث تمكن الأسطورة توتة من فك تشفير الحزم باستخدام أداة custom python exploit وحقن كود التحكم بالنواة.')" class="w-full py-2.5 rounded-xl bg-cyber-red/10 border border-cyber-red text-cyber-red hover:bg-cyber-red hover:text-black font-bold text-xs code-font transition-all">
+                        عرض السجل الفني للعملية
+                    </button>
+                </div>
+
+                <!-- Operation Card 2 -->
+                <div class="bg-cyber-card border border-cyber-cyan/40 rounded-3xl p-6 relative overflow-hidden group hover:shadow-[0_0_30px_rgba(0,240,255,0.3)] transition-all">
+                    <div class="absolute top-0 right-0 bg-cyber-cyan text-black text-[10px] font-black uppercase px-3 py-1 rounded-bl-xl code-font">
+                        EXPLOIT SUITE
+                    </div>
+                    <div class="text-cyber-cyan text-3xl mb-4">
+                        <i class="fa-solid fa-eye text-cyber-red"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">حزمة أدوات "Red-Eye Cyber Suite"</h3>
+                    <p class="text-gray-400 text-xs sm:text-sm mb-4 leading-relaxed">
+                        تطوير حزمة أدوات اختراق خاصة ومُشفّرة بالكامل من صُنع توتة (حسين)، تعمل على تحليل وحقن الذاكرة الخفية للأنظمة المصرفية.
+                    </p>
+                    <button onclick="openExploitModal('Red-Eye Cyber Suite', 'حزمة برمجية مبنية بلغة C++ و Rust، تقوم بتجاوز جميع مضادات الفيروسات وأنظمة EDR في البنوك وتوليد مسارات وصول جذري (Root Shell).')" class="w-full py-2.5 rounded-xl bg-cyber-cyan/10 border border-cyber-cyan text-cyber-cyan hover:bg-cyber-cyan hover:text-black font-bold text-xs code-font transition-all">
+                        عرض السجل الفني للعملية
+                    </button>
+                </div>
+
+                <!-- Operation Card 3 -->
+                <div class="bg-cyber-card border border-cyber-green/40 rounded-3xl p-6 relative overflow-hidden group hover:shadow-[0_0_30px_rgba(0,255,102,0.3)] transition-all">
+                    <div class="absolute top-0 right-0 bg-cyber-green text-black text-[10px] font-black uppercase px-3 py-1 rounded-bl-xl code-font">
+                        ZERO-DAY FOUND
+                    </div>
+                    <div class="text-cyber-green text-3xl mb-4">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">تفكيك تشفير خوادم الصراف الآلي (ATM)</h3>
+                    <p class="text-gray-400 text-xs sm:text-sm mb-4 leading-relaxed">
+                        اختراق بروتوكول الاتصال بين أجهزة الصرف الآلي والسيرفر الرئيسي، وكشف آلية التشفير الكمي المستخدمة لتأمين المعاملات.
+                    </p>
+                    <button onclick="openExploitModal('ATM Core Decryption', 'عملية تحليل الهندسة العكسية لملفات النظام المصرفي، واستخراج المفاتيح السرية الخاصة بالشبكات المالية المحلية والعالمية.')" class="w-full py-2.5 rounded-xl bg-cyber-green/10 border border-cyber-green text-cyber-green hover:bg-cyber-green hover:text-black font-bold text-xs code-font transition-all">
+                        عرض السجل الفني للعملية
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Command Line / Hacker Terminal Simulator -->
+    <section id="terminal-section" class="relative z-10 py-20 bg-cyber-card/80 border-t border-cyber-red/30">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6">
+            
+            <div class="text-center mb-10">
+                <h2 class="text-3xl sm:text-4xl font-black text-white">
+                    التيرمينال التفاعلي لـ <span class="text-cyber-red">تــوتــة</span>
+                </h2>
+                <p class="mt-2 text-gray-400 text-xs sm:text-sm code-font">
+                    اكتب الأوامر أدناه لاستكشاف النظام (جرب: help, whoami, skills, banks, clear)
+                </p>
+            </div>
+
+            <!-- Terminal Outer Box -->
+            <div class="rounded-2xl border-2 border-cyber-red/60 bg-black overflow-hidden shadow-[0_0_40px_rgba(255,0,60,0.25)] code-font">
+                
+                <!-- Terminal Header Bar -->
+                <div class="bg-cyber-card px-4 py-3 flex items-center justify-between border-b border-gray-800">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-red-500"></span>
+                        <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+                        <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                    </div>
+                    <div class="text-xs text-gray-400 flex items-center gap-2">
+                        <i class="fa-solid fa-lock text-cyber-red"></i> root@toota-hussein:~#
+                    </div>
+                </div>
+
+                <!-- Terminal Body Output -->
+                <div id="terminal-body" class="p-6 h-80 overflow-y-auto text-sm leading-relaxed space-y-3 font-mono text-gray-200">
+                    <p class="text-cyber-green">&gt; SYSTEM INITIALIZED. WELCOME TO TOOTA (HUSSEIN) TERMINAL V4.0</p>
+                    <p class="text-cyber-cyan">&gt; Type <span class="text-cyber-red font-bold">'help'</span> to see available commands.</p>
+                </div>
+
+                <!-- Terminal Quick Command Bar for Mobile Users -->
+                <div class="bg-cyber-card/80 p-2 border-t border-gray-800 flex flex-wrap gap-2 text-xs">
+                    <span class="text-gray-400 self-center px-2">أوامر سريعة:</span>
+                    <button onclick="executeCommand('help')" class="px-3 py-1 rounded bg-black border border-cyber-red/40 text-cyber-red hover:bg-cyber-red hover:text-black transition">help</button>
+                    <button onclick="executeCommand('whoami')" class="px-3 py-1 rounded bg-black border border-cyber-cyan/40 text-cyber-cyan hover:bg-cyber-cyan hover:text-black transition">whoami</button>
+                    <button onclick="executeCommand('skills')" class="px-3 py-1 rounded bg-black border border-cyber-green/40 text-cyber-green hover:bg-cyber-green hover:text-black transition">skills</button>
+                    <button onclick="executeCommand('banks')" class="px-3 py-1 rounded bg-black border border-cyber-red/40 text-cyber-red hover:bg-cyber-red hover:text-black transition">banks</button>
+                    <button onclick="executeCommand('clear')" class="px-3 py-1 rounded bg-black border border-gray-600 text-gray-400 hover:bg-white hover:text-black transition">clear</button>
+                </div>
+
+                <!-- Command Input Row -->
+                <div class="p-4 bg-black border-t border-gray-900 flex items-center gap-3">
+                    <span class="text-cyber-red font-bold text-base">&gt;</span>
+                    <input type="text" id="terminal-input" placeholder="ادخل الأمر هنا..." class="w-full bg-transparent text-white font-mono focus:outline-none text-sm placeholder-gray-600" autocomplete="off">
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Encrypted Contact Section -->
+    <section id="contact" class="relative z-10 py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center mb-16">
+                <h2 class="text-3xl sm:text-5xl font-black text-white">
+                    تواصل مـشـفـر مـع الأسـطـورة
+                </h2>
+                <div class="w-24 h-1 bg-cyber-red mx-auto mt-4 rounded-full shadow-[0_0_10px_#ff003c]"></div>
+                <p class="mt-4 text-gray-400 text-sm sm:text-base code-font">
+                    [ENCRYPTED PGP TRANSMISSION CHANNEL]
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                
+                <!-- Contact Direct Cards -->
+                <div class="lg:col-span-5 space-y-6">
+                    
+                    <div class="bg-cyber-card border border-cyber-red/30 p-6 rounded-3xl flex items-center gap-5 hover:border-cyber-red transition-all">
+                        <div class="w-14 h-14 rounded-2xl bg-cyber-red/10 text-cyber-red border border-cyber-red flex items-center justify-center text-2xl flex-shrink-0">
+                            <i class="fa-brands fa-telegram"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs text-cyber-cyan code-font block">TELEGRAM SECURE ACCESS</span>
+                            <h4 class="text-lg font-bold text-white">@TOOTA_HUSSEIN</h4>
+                            <p class="text-xs text-gray-400">للتواصل المباشر والاستشارات الأمنية العاجلة</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-cyber-card border border-cyber-cyan/30 p-6 rounded-3xl flex items-center gap-5 hover:border-cyber-cyan transition-all">
+                        <div class="w-14 h-14 rounded-2xl bg-cyber-cyan/10 text-cyber-cyan border border-cyber-cyan flex items-center justify-center text-2xl flex-shrink-0">
+                            <i class="fa-brands fa-github"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs text-cyber-cyan code-font block">REPOSITORIES & EXPLOITS</span>
+                            <h4 class="text-lg font-bold text-white">github.com/TootaHussein</h4>
+                            <p class="text-xs text-gray-400">مستودع الأكواد والأدوات البرمجية</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-cyber-card border border-cyber-green/30 p-6 rounded-3xl flex items-center gap-5 hover:border-cyber-green transition-all">
+                        <div class="w-14 h-14 rounded-2xl bg-cyber-green/10 text-cyber-green border border-cyber-green flex items-center justify-center text-2xl flex-shrink-0">
+                            <i class="fa-solid fa-key"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs text-cyber-green code-font block">PGP PUBLIC FINGERPRINT</span>
+                            <h4 class="text-sm font-bold text-white code-font">4A92 88BF E291 TOOTA 9901</h4>
+                            <p class="text-xs text-gray-400">مفتاح التشفير العام للرسائل السرية</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Contact Interactive Encrypted Form -->
+                <div class="lg:col-span-7">
+                    <form id="contact-form" class="bg-cyber-card border-2 border-cyber-red/40 p-8 rounded-3xl space-y-6 relative shadow-[0_0_30px_rgba(255,0,60,0.15)]">
+                        <h3 class="text-xl font-bold text-white code-font mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-paper-plane text-cyber-red"></i> إرسال برقية مشفرة
+                        </h3>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-xs text-gray-300 font-bold mb-2 code-font">اسمك / اللقب السيبراني</label>
+                                <input type="text" required placeholder="مثال: Agent_001" class="w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyber-red code-font text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-300 font-bold mb-2 code-font">عنوان الاتصال المشفر</label>
+                                <input type="email" required placeholder="email@secure.com" class="w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyber-red code-font text-sm">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-gray-300 font-bold mb-2 code-font">موضوع الرسالة</label>
+                            <input type="text" required placeholder="فحص ثغرة أمنية / تطوير نظام برمجي" class="w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyber-red code-font text-sm">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-gray-300 font-bold mb-2 code-font">تفاصيل البرقية (Encrypted Payload)</label>
+                            <textarea rows="4" required placeholder="اكتب تفاصيل الرسالة..." class="w-full bg-black border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyber-red code-font text-sm"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full py-4 rounded-xl bg-cyber-red text-black font-black text-sm uppercase tracking-wider hover:bg-white hover:shadow-[0_0_30px_#ffffff] transition-all duration-300 flex items-center justify-center gap-3">
+                            <i class="fa-solid fa-lock"></i> تشفير وإرسال البرقية الان
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal for Operation Details -->
+    <div id="exploit-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="bg-cyber-card border-2 border-cyber-red max-w-lg w-full rounded-3xl p-6 relative shadow-[0_0_50px_#ff003c]">
+            <button onclick="closeExploitModal()" class="absolute top-4 left-4 text-gray-400 hover:text-cyber-red text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 id="modal-title" class="text-xl font-bold text-cyber-red code-font mb-4">عنوان العملية</h3>
+            <p id="modal-desc" class="text-sm text-gray-300 leading-relaxed mb-6">تفاصيل العملية...</p>
+            <div class="bg-black p-4 rounded-xl border border-gray-800 text-xs text-cyber-green code-font space-y-1 mb-6">
+                <p>&gt; STATUS: DECRYPTED</p>
+                <p>&gt; EXPLOIT TYPE: ZERO-DAY MEMORY CORRUPTION</p>
+                <p>&gt; AUTHOR: TOOTA (HUSSEIN)</p>
+            </div>
+            <button onclick="closeExploitModal()" class="w-full py-2.5 bg-cyber-red text-black font-bold text-xs rounded-xl hover:bg-white transition-all">
+                إغلاق النافذة
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="relative z-10 border-t border-cyber-red/30 bg-cyber-black py-8 text-center text-xs text-gray-500 code-font">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+                جميع الحقوق محفوظة &copy; 2026 <span class="text-cyber-red font-bold">تــوتــة (حســين)</span>
+            </div>
+            <div class="flex items-center gap-4 text-cyber-cyan">
+                <span>IP: <span id="user-ip">127.0.0.1</span></span>
+                <span>STATUS: OVERLORD</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Interactions & Web Audio API -->
+    <script>
+        
+        // Web Audio API Sound Effects Synthesizer
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let soundEnabled = true;
+
+        function playBeep(freq = 800, type = 'sine', duration = 0.08) {
+            if (!soundEnabled) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        // Sound Toggle
+        document.getElementById('audio-toggle-btn').addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('audio-icon');
+            if (soundEnabled) {
+                icon.className = 'fa-solid fa-volume-high';
+                playBeep(1200, 'triangle', 0.1);
+            } else {
+                icon.className = 'fa-solid fa-volume-xmark';
+            }
+        });
+
+        // Add sound to all buttons and links
+        document.querySelectorAll('button, a, input').forEach(el => {
+            el.addEventListener('mouseenter', () => playBeep(400, 'sine', 0.03));
+            el.addEventListener('click', () => playBeep(900, 'square', 0.08));
+        });
+
+        // Mobile Menu Drawer Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileDrawer = document.getElementById('mobile-drawer');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileDrawer.classList.toggle('hidden');
+        });
+
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileDrawer.classList.add('hidden');
+            });
+        });
+
+        // Profile Image Upload Feature
+        document.getElementById('image-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('profile-img').src = event.target.result;
+                    playBeep(1500, 'sawtooth', 0.2);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Laser Eye Flare Toggle Mode
+        let laserActive = true;
+        document.getElementById('laser-mode-btn').addEventListener('click', () => {
+            laserActive = !laserActive;
+            const laserEye = document.getElementById('laser-eye');
+            const laserBeam = document.getElementById('laser-beam');
+            const btnText = document.getElementById('laser-mode-btn');
+
+            if (laserActive) {
+                laserEye.style.display = 'block';
+                laserBeam.style.display = 'block';
+                btnText.innerHTML = '<i class="fa-solid fa-bolt"></i> توهج الليزر: نشط';
+                playBeep(1800, 'sawtooth', 0.15);
+            } else {
+                laserEye.style.display = 'none';
+                laserBeam.style.display = 'none';
+                btnText.innerHTML = '<i class="fa-solid fa-power-off"></i> توهج الليزر: معطل';
+            }
+        });
+
+        // Typing Text Animation Effect
+        const typingTexts = [
+            "جاري اتوافق مع سيرفرات البنك المركزي...",
+            "اكتشاف ثغرة Zero-Day جديدة في النواة...",
+            "تشفير الحزم واستخراج الصلاحيات المطلقة...",
+            "توتة (حسين) - الأسطورة غير القابلة للإيقاف!"
+        ];
+        let textIdx = 0;
+        let charIdx = 0;
+        let isDeleting = false;
+        const typedTextEl = document.getElementById('typed-text');
+
+        function typeLoop() {
+            const currentStr = typingTexts[textIdx];
+            if (isDeleting) {
+                typedTextEl.textContent = currentStr.substring(0, charIdx - 1);
+                charIdx--;
+            } else {
+                typedTextEl.textContent = currentStr.substring(0, charIdx + 1);
+                charIdx++;
+                playBeep(600 + (charIdx * 20), 'sine', 0.02);
+            }
+
+            let typeSpeed = isDeleting ? 40 : 80;
+
+            if (!isDeleting && charIdx === currentStr.length) {
+                typeSpeed = 2000; // Pause at end
+                isDeleting = true;
+            } else if (isDeleting && charIdx === 0) {
+                isDeleting = false;
+                textIdx = (textIdx + 1) % typingTexts.length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(typeLoop, typeSpeed);
+        }
+        typeLoop();
+
+        // Terminal Interactive Command Logic
+        const terminalBody = document.getElementById('terminal-body');
+        const terminalInput = document.getElementById('terminal-input');
+
+        function executeCommand(cmd) {
+            const cleanCmd = cmd.trim().toLowerCase();
+            
+            // Print user command
+            const userMsg = document.createElement('p');
+            userMsg.className = 'text-white font-bold';
+            userMsg.innerHTML = `<span class="text-cyber-red">&gt; </span> ${cmd}`;
+            terminalBody.appendChild(userMsg);
+
+            // Command Responses
+            let response = '';
+            switch(cleanCmd) {
+                case 'help':
+                    response = `<p class="text-cyber-cyan">&gt; الأوامر المتاحة:<br>
+                    - <b class="text-cyber-red">whoami</b> : معلومات عن الأسطورة توتة (حسين)<br>
+                    - <b class="text-cyber-red">skills</b> : عرض قدرات الهكر والبرمجة<br>
+                    - <b class="text-cyber-red">banks</b> : سجل اختراق البنوك والأنظمة<br>
+                    - <b class="text-cyber-red">contact</b> : طرق التواصل المشفرة<br>
+                    - <b class="text-cyber-red">clear</b> : مسح شاشة التيرمينال</p>`;
+                    break;
+                case 'whoami':
+                    response = `<p class="text-gray-300">&gt; الاسم: <b class="text-cyber-red">تـــوتـــة (حــســيــن)</b><br>
+                    &gt; المهنة: خبير الأمن السيبراني وعملاق هندسة البرمجيات.<br>
+                    &gt; الحالة: تم اختراق جميع القيود بنجاح.</p>`;
+                    break;
+                case 'skills':
+                    response = `<p class="text-cyber-green">&gt; المهارات الأساسية:<br>
+                    [99%] اختراق الأنظمة والبنك المركزي<br>
+                    [97%] اكتشاف ثغرات الـ Zero-Day<br>
+                    [96%] برمجة بلغة C++, Python, Rust & Assembly</p>`;
+                    break;
+                case 'banks':
+                    response = `<p class="text-cyber-red">&gt; الأنظمة المستهدفة: SWIFT Protocols, Central Bank Servers, ATM Networks Core.<br>
+                    &gt; النتيجة: ROOT ACCESS GRANTED.</p>`;
+                    break;
+                case 'contact':
+                    response = `<p class="text-cyber-cyan">&gt; تليجرام: @TOOTA_HUSSEIN | PGP: 4A92-88BF</p>`;
+                    break;
+                case 'clear':
+                    terminalBody.innerHTML = '';
+                    return;
+                default:
+                    response = `<p class="text-red-500">&gt; أمر غير معروف: '${cleanCmd}'. اكتب <b class="text-white">'help'</b> لعرض الأوامر.</p>`;
+            }
+
+            const resEl = document.createElement('div');
+            resEl.innerHTML = response;
+            terminalBody.appendChild(resEl);
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+            playBeep(1000, 'square', 0.1);
+        }
+
+        terminalInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && terminalInput.value) {
+                executeCommand(terminalInput.value);
+                terminalInput.value = '';
+            }
+        });
+
+        // Modal Functions
+        function openExploitModal(title, desc) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-desc').textContent = desc;
+            document.getElementById('exploit-modal').classList.remove('hidden');
+            document.getElementById('exploit-modal').classList.add('flex');
+            playBeep(1400, 'triangle', 0.15);
+        }
+
+        function closeExploitModal() {
+            document.getElementById('exploit-modal').classList.add('hidden');
+            document.getElementById('exploit-modal').classList.remove('flex');
+        }
+
+        // Form Submit Simulation
+        document.getElementById('contact-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            playBeep(1600, 'square', 0.3);
+            alert('تم تشفير البرقية بنجاح وإرسالها إلى الأسطورة توتة (حسين)!');
+            e.target.reset();
+        });
+
+        // Matrix Rain Canvas Animation Effect
+        const canvas = document.getElementById('cyber-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const chars = '01TOOTAHUSSEIN#$@%&*<>?/{}[]!+=';
+        const fontSize = 14;
+        let columns = Math.floor(canvas.width / fontSize);
+        let drops = Array(columns).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(5, 5, 8, 0.08)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#ff003c';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                // Randomly mix red and cyan matrix drops
+                ctx.fillStyle = (i % 5 === 0) ? '#00f0ff' : '#ff003c';
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 40);
+
+        // Fake IP Simulator
+        document.getElementById('user-ip').textContent = `${Math.floor(Math.random()*150)+50}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
+
+    </script>
+</body>
+</html>
